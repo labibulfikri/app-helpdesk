@@ -36,6 +36,11 @@
         .table { @apply text-[13px]; }
         .table thead tr { @apply border-b border-base-300 bg-base-200/50 text-[11px] uppercase tracking-wider font-extrabold; }
     </style>
+
+       {{-- SCRIPTS & ASSETS --}}
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="h-screen overflow-hidden" x-data="{ sidebarOpen: true, mobileSidebar: false }">
 
@@ -73,11 +78,25 @@
                                 <span class="text-xs font-black text-base-content leading-none">{{ auth()->user()?->name ?? 'Guest' }}</span>
                                 <span class="text-[9px] font-bold opacity-50 mt-1 uppercase tracking-tighter">{{ auth()->user()?->role ?? 'N/A' }}</span>
                             </div>
-                            <div class="avatar">
+                            {{-- <div class="avatar">
                                 <div class="w-9 lg:w-10 rounded-xl ring ring-primary ring-offset-base-100 ring-offset-2">
                                     <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()?->name ?? 'G') }}&background=random&color=fff&bold=true" />
                                 </div>
-                            </div>
+                            </div> --}}
+                            <div class="avatar">
+    <div class="w-9 lg:w-10 rounded-xl ring ring-primary ring-offset-base-100 ring-offset-2">
+        @if(auth()->user()?->foto)
+            {{-- Jika foto ada di database --}}
+            <img src="{{ asset('storage/' . auth()->user()->foto) }}"
+                 class="object-cover"
+                 alt="{{ auth()->user()->name }}" />
+        @else
+            {{-- Jika foto null, gunakan UI-Avatars (Inisial) --}}
+            <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()?->name ?? 'G') }}&background=random&color=fff&bold=true"
+                 alt="Avatar Inisial" />
+        @endif
+    </div>
+</div>
                         </div>
                         <ul tabindex="0" class="dropdown-content z-[100] menu p-3 shadow-2xl bg-base-100 rounded-2xl w-64 border border-base-300 mt-4">
                             <li class="menu-title text-[10px] font-black opacity-40 uppercase px-4 pt-2">Profil Saya</li>

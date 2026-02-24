@@ -95,7 +95,7 @@ new class extends Component {
         </a>
     </div>
 
-    <form wire:submit.prevent="updateAsset" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <form wire:submit.prevent="updateAsset" class="grid grid-cols-1 lg:grid-cols-3 gap-8" enctype="multipart/form-data">
 
         <div class="lg:col-span-2 space-y-6">
             <div class="card bg-base-100/40 backdrop-blur-xl border border-base-content/5 shadow-2xl rounded-[3rem] p-8 lg:p-12">

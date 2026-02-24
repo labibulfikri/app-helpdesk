@@ -31,6 +31,9 @@ Route::get('/tickets/{id}/print', [TicketPrintController::class, 'print'])->name
     //route untuk profile
     Route::livewire('/profile', 'pages::profile.⚡index')->name('profile.index');
 
+    //route report
+    Route::livewire('/report', 'pages::report.⚡index')->name('report.index');
+
 
 
     Route::livewire('/tickets/{id}/details', 'pages::tickets.⚡details')->name('tickets.details');

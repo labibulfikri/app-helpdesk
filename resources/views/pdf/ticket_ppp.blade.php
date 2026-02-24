@@ -54,7 +54,7 @@
     <tr>
         <td>Resource / Tipe</td>
         <td>:</td>
-        <td>{{ $ticket->asset->name ?? '-' }}</td>
+        <td>{{ $ticket->resource_type ?? '-' }}</td>
         <td><div class="box"></div> Pemeliharaan</td>
         <td rowspan="3" style="vertical-align: bottom; height: 60px;">
             <div class="text-center">
@@ -93,7 +93,7 @@
                 <tr><td class="bg-gray text-center" style="border: none; border-bottom: 1px solid black;">Waktu yang diberikan <sup>(1)</sup></td></tr>
                 <tr><td style="border: none; border-bottom: 1px solid black; height: 25px;">Maks. 24 jam</td></tr>
                 <tr><td style="border: none; border-bottom: 1px solid black; height: 25px;">Maks. 2 x 24 jam</td></tr>
-                <tr><td style="border: none; height: 25px;">Selesaikan tanggal:</td></tr>
+                <tr><td style="border: none; height: 25px;">Selesaikan tanggal: {{ $ticket->alloted_time ? date('d/m/Y', strtotime($ticket->alloted_time)) : '-' }}</td></tr>
             </table>
         </td>
         <td style="vertical-align: top; padding: 0;">

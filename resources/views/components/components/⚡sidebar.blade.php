@@ -63,7 +63,7 @@ new class extends Component
                 <span x-show="sidebarOpen" class="font-black text-[11px] uppercase tracking-[0.15em] whitespace-nowrap">Permohonan Tiket</span>
             </a>
 
-            @if(in_array(auth()->user()?->role, ['staff', 'technician', 'admin', 'hrd']))
+            @if(in_array(auth()->user()?->role, ['staff', 'technician', 'admin', 'superadmin']))
                 <a href="/profile" wire:navigate
                    class="group flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-300
                    {{ request()->is('profile*')
@@ -80,7 +80,7 @@ new class extends Component
 
             @endif
 
-            @if(in_array(auth()->user()?->role, ['admin', 'hrd']))
+            @if(in_array(auth()->user()?->role, ['admin', 'superadmin']))
                 <div x-show="sidebarOpen" class="px-4 pt-6 pb-3 text-[10px] font-black opacity-30 uppercase tracking-[0.3em]">Management</div>
 
                 <a href="/departement" wire:navigate
@@ -111,7 +111,7 @@ new class extends Component
                     <span x-show="sidebarOpen" class="font-black text-[11px] uppercase tracking-[0.15em] whitespace-nowrap">Pegawai</span>
                 </a>
 
-                <div x-show="sidebarOpen" class="px-4 pt-6 pb-3 text-[10px] font-black opacity-30 uppercase tracking-[0.3em]">Category</div>
+                <div x-show="sidebarOpen" class="px-4 pt-6 pb-3 text-[10px] font-black opacity-30 uppercase tracking-[0.3em]">Master </div>
 
                 <a href="/categories" wire:navigate
                    class="group flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-300
@@ -138,6 +138,19 @@ new class extends Component
                         </svg>
                     </div>
                     <span x-show="sidebarOpen" class="font-black text-[11px] uppercase tracking-[0.15em] whitespace-nowrap">Master Aset</span>
+                </a>
+                <a href="/report" wire:navigate
+                   class="group flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-300
+                   {{ request()->is('reports*')
+                      ? 'bg-primary text-primary-content shadow-xl shadow-primary/20'
+                      : 'text-base-content/60 hover:bg-primary/10 hover:text-primary'
+                   }}">
+                    <div class="flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                    <span x-show="sidebarOpen" class="font-black text-[11px] uppercase tracking-[0.15em] whitespace-nowrap">Laporan</span>
                 </a>
             @endif
 

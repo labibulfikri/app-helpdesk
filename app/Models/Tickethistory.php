@@ -23,7 +23,8 @@ class Tickethistory extends Model
         'status_from',
         'status_to',
         'comment',
-        'is_read'
+        'is_read',
+        'received_id'
     ];
 
     /**

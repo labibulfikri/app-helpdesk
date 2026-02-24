@@ -180,7 +180,7 @@ new class  extends Component
                 </div>
 
                 <div class="overflow-x-auto">
-                    <table class="table w-full">
+                    <table class="table table-zebra w-full">
                         <thead>
                             <tr class="bg-base-100/50 border-b border-base-200">
                                 <th class="w-24 py-5 px-6">Kode</th>

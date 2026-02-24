@@ -36,6 +36,7 @@ class Ticket extends Model
         'alloted_time',
         'attachment',
         'aset_id',
+        'alasan_pembatalan'
     ];
 
     protected $guarded = [];

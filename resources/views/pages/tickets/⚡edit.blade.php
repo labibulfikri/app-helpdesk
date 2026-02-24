@@ -169,7 +169,8 @@ new class extends Component {
                             </div>
 
                             <div class="flex items-center justify-between pt-10 border-t border-slate-100">
-                                <a href="{{ route('tickets.details', $ticket->id) }}" class="btn btn-ghost font-black uppercase text-[10px] tracking-widest">Batal</a>
+                                <a href="{{ route('tickets.index') }}" class="btn btn-ghost font-black uppercase text-[10px] tracking-widest">Batal</a>
+                                {{-- <a href="{{ route('tickets.details', $ticket->id) }}" class="btn btn-ghost font-black uppercase text-[10px] tracking-widest">Batal</a> --}}
                                 <button type="submit" wire:loading.attr="disabled" class="btn btn-primary px-12 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] shadow-xl shadow-primary/20 transition-all hover:scale-105 active:scale-95">
                                     Update Permohonan
                                 </button>

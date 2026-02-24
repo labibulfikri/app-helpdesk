@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             //
-            $table->foreignId('departement_id')->nullable()->constrained();
-    $table->enum('role', ['admin', 'superadmin', 'technician', 'staff'])->default('staff');
+                $table->string('jabatan')->nullable()->after('email');
         });
     }
 
@@ -25,8 +24,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             //
-            $table->dropColumn('departement_id');
-            $table->dropColumn('role');
+                $table->dropColumn('jabatan');
         });
     }
 };

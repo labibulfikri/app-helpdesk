@@ -24,9 +24,9 @@ new class extends Component {
             <a href="{{ route('aset.edit', $this->aset->id) }}" wire:navigate class="btn btn-warning rounded-2xl font-black text-[10px] uppercase italic px-8 shadow-xl shadow-warning/20">
                 Edit Unit
             </a>
-            <button class="btn btn-primary rounded-2xl font-black text-[10px] uppercase italic px-8 shadow-xl shadow-primary/20">
+            {{-- <button class="btn btn-primary rounded-2xl font-black text-[10px] uppercase italic px-8 shadow-xl shadow-primary/20">
                 Cetak QR
-            </button>
+            </button> --}}
         </div>
     </div>
 
@@ -36,7 +36,7 @@ new class extends Component {
             <div class="card bg-base-100 shadow-2xl rounded-[3rem] overflow-hidden border border-base-content/5">
                 <div class="aspect-square relative group">
                     @if($this->aset->foto)
-                        <img src="{{ asset('storage/' . $this->aset->foto) }}" class="w-full h-full object-cover">
+                        <img src="{{ asset('storage/' . $this->aset->foto) }}" class="w-full h-full object-cover p-3 rounded-[2.5rem] group-hover:scale-105 transition-transform duration-300" alt="{{ $this->aset->nama_aset }}">
                     @else
                         <div class="w-full h-full bg-base-200 flex items-center justify-center text-base-content/10">
                             <svg class="w-24 h-24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
