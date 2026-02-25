@@ -88,59 +88,71 @@ new class extends Component {
             </div>
         </div>
 
+
         <div class="col-span-12 lg:col-span-8">
-            <div class="card bg-white/60 backdrop-blur-xl shadow-2xl rounded-[3rem] p-10 border border-white/20 h-full">
-                <div class="flex items-center justify-between mb-10">
-                    <h3 class="text-2xl font-black tracking-tighter uppercase italic">Repair <span class="text-primary">History</span></h3>
-                    <div class="text-[10px] font-black opacity-30 uppercase tracking-[0.2em]">Total {{ $this->aset->tickets->count() }} Laporan</div>
-                </div>
+    <div class="card bg-white/60 backdrop-blur-xl shadow-2xl rounded-[3rem] p-10 border border-white/20 h-full">
+        <div class="flex items-center justify-between mb-10">
+            <h3 class="text-2xl font-black tracking-tighter uppercase italic">Repair <span class="text-primary">History</span></h3>
+            <div class="text-[10px] font-black opacity-30 uppercase tracking-[0.2em]">Total {{ $this->aset->tickets->count() }} Laporan</div>
+        </div>
 
-                @if($this->aset->tickets->count() > 0)
-                    <div class="space-y-8 relative before:absolute before:inset-y-0 before:left-[19px] before:w-0.5 before:bg-base-content/5">
-                        @foreach($this->aset->tickets as $ticket)
-                            <div class="relative pl-12">
-                                <div class="absolute left-0 top-1 w-10 h-10 rounded-2xl bg-white shadow-lg flex items-center justify-center z-10 border border-base-content/5">
-                                    <div class="w-3 h-3 rounded-full {{ $ticket->status == 'closed' ? 'bg-success' : 'bg-warning animate-pulse' }}"></div>
+        @if($this->aset->tickets->count() > 0)
+            {{-- Kontainer Utama Timeline --}}
+            <div class="space-y-6 relative before:absolute before:inset-y-0 before:left-[20px] before:w-0.5 before:bg-base-content/5">
+
+                @foreach($this->aset->tickets as $ticket)
+                    <div class="relative flex items-start gap-6"> {{-- Gunakan Flex untuk menyejajarkan icon dan card --}}
+
+                        {{-- Icon Indicator (Sejajar dengan garis) --}}
+                        <div class="relative z-10 flex-none">
+                            <div class="w-10 h-10 rounded-2xl bg-white shadow-lg flex items-center justify-center border border-base-content/5">
+                                <div class="w-3 h-3 rounded-full {{ $ticket->status == 'closed' ? 'bg-success' : 'bg-warning animate-pulse' }}"></div>
+                            </div>
+                        </div>
+
+                        {{-- Card Konten (Sekarang sejajar secara vertikal) --}}
+                        <div class="flex-1 bg-base-200/40 hover:bg-white transition-all duration-300 p-6 rounded-[2rem] border border-transparent hover:border-primary/20 hover:shadow-xl group">
+                            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                                <div>
+                                    <span class="text-[9px] font-black text-primary uppercase tracking-widest italic">#{{ $ticket->ticket_number ?? 'TK-'.$ticket->id }}</span>
+                                    <h4 class="font-black text-sm uppercase tracking-tight group-hover:text-primary transition-colors">{{ $ticket->tindakan ?? 'Masalah Teknis' }}</h4>
                                 </div>
-
-                                <div class="bg-base-200/40 hover:bg-white transition-all duration-300 p-6 rounded-[2rem] border border-transparent hover:border-primary/20 hover:shadow-xl group">
-                                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-                                        <div>
-                                            <span class="text-[9px] font-black text-primary uppercase tracking-widest italic">#{{ $ticket->ticket_number ?? 'TK-'.$ticket->id }}</span>
-                                            <h4 class="font-black text-sm uppercase tracking-tight group-hover:text-primary transition-colors">{{ $ticket->tindakan ?? 'Masalah Teknis' }}</h4>
-                                        </div>
-                                        <div class="text-right">
-                                            <span class="block text-[9px] font-black opacity-30 uppercase tracking-widest">{{ $ticket->created_at->format('d F Y') }}</span>
-                                            <span class="badge {{ $ticket->status == 'closed' ? 'badge-success' : 'badge-warning' }} badge-xs font-black uppercase text-[7px] py-2">{{ $ticket->status }}</span>
-                                        </div>
-                                    </div>
-                                    <p class="text-xs font-bold opacity-60 leading-relaxed mb-4 italic">
-                                        "{{ Str::limit($ticket->problem_detail ?? 'Tidak ada deskripsi detail.', 150) }}"
-                                    </p>
-                                    <div class="flex items-center gap-3 pt-4 border-t border-base-content/5">
-                                        <div class="avatar">
-                                            <div class="w-6 h-6 rounded-full opacity-50">
-                                                <img src="https://ui-avatars.com/api/?name={{ $ticket->user->name ?? 'U' }}&background=random" />
-                                            </div>
-                                        </div>
-                                        <span class="text-[9px] font-black uppercase tracking-widest opacity-40">Dilaporkan Oleh: {{ $ticket->user->name ?? 'System' }}</span>
-                                    </div>
-
-                                    <div class="mt-4 text-right">
-                                        <a href="{{ route('tickets.details', $ticket->id) }}" wire:navigate class="btn btn-primary btn-sm rounded-xl font-black uppercase text-[9px] tracking-widest opacity-50 hover:opacity-100">
-                                            Lihat Detail
-                                        </a>
+                                <div class="md:text-right">
+                                    <span class="block text-[9px] font-black opacity-30 uppercase tracking-widest">{{ $ticket->created_at->format('d F Y') }}</span>
+                                    <span class="badge {{ $ticket->status == 'closed' ? 'badge-success' : 'badge-warning' }} badge-xs font-black uppercase text-[7px] py-2">{{ $ticket->status }}</span>
                                 </div>
                             </div>
-                        @endforeach
+
+                            <p class="text-xs font-bold opacity-60 leading-relaxed mb-4 italic">
+                                "{{ Str::limit($ticket->problem_detail ?? 'Tidak ada deskripsi detail.', 150) }}"
+                            </p>
+
+                            <div class="flex flex-row items-center justify-between pt-4 border-t border-base-content/5 gap-3">
+                                <div class="flex items-center gap-2">
+                                    <div class="avatar">
+                                        <div class="w-6 h-6 rounded-full opacity-70">
+                                            <img src="https://ui-avatars.com/api/?name={{ $ticket->user->name ?? 'U' }}&background=random" />
+                                        </div>
+                                    </div>
+                                    <span class="text-[9px] font-black uppercase tracking-widest opacity-40">Oleh: {{ $ticket->user->name ?? 'System' }}</span>
+                                </div>
+
+                                <a href="{{ route('tickets.details', $ticket->id) }}" wire:navigate class="btn btn-primary btn-sm rounded-xl font-black uppercase text-[9px] tracking-widest opacity-50 hover:opacity-100">
+                                    Detail
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                @else
-                    <div class="flex flex-col items-center justify-center py-20 opacity-20">
-                        <svg class="w-20 h-20 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        <p class="font-black italic uppercase tracking-widest text-xs text-center leading-relaxed">Aset ini belum pernah<br>dilaporkan bermasalah</p>
-                    </div>
-                @endif
+                @endforeach
+
             </div>
-        </div>
+        @else
+            <div class="flex flex-col items-center justify-center py-20 opacity-20">
+                <svg class="w-20 h-20 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <p class="font-black italic uppercase tracking-widest text-xs text-center leading-relaxed">Aset ini belum pernah<br>dilaporkan bermasalah</p>
+            </div>
+        @endif
+    </div>
+</div>
     </div>
 </div>

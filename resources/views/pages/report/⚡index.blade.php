@@ -95,9 +95,9 @@ new class extends Component
                 <h1 class="text-4xl font-black italic uppercase tracking-tighter">Report Analytics</h1>
                 <p class="text-[10px] font-bold opacity-50 uppercase tracking-[0.2em]">Maintenance & Dept Performance</p>
             </div>
-            <button onclick="window.print()" class="btn btn-primary rounded-2xl font-black uppercase px-8 shadow-xl shadow-primary/20">
+            {{-- <button onclick="window.print()" class="btn btn-primary rounded-2xl font-black uppercase px-8 shadow-xl shadow-primary/20">
                 Print Report
-            </button>
+            </button> --}}
         </div>
 
         {{-- FILTER BOX --}}
