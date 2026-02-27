@@ -1,6 +1,6 @@
 <?php
 use Livewire\Component;
-use App\Models\{Ticket, Aset, Tickethistory, Departement};
+use App\Models\{Ticket, Aset, Tickethistory, Departement, User};
 use Illuminate\Support\Facades\Auth;
 use Livewire\WithFileUploads;
 
@@ -8,7 +8,7 @@ new class extends Component {
     use WithFileUploads;
 
     // Property lengkap sesuai kebutuhan database Anda
-    public $target_departement_id, $aset_id, $category, $tindakan;
+    public  $aset_id, $category, $tindakan, $kode_ppp;
     public $resource_type,  $problem_detail, $emergency_action, $attachment;
     public $alloted_time = "24";
     public $custom_date;
@@ -16,10 +16,11 @@ new class extends Component {
    public function createTicket() {
     // 1. Validasi
     $validated = $this->validate([
-        'target_departement_id' => 'required|exists:departements,id',
+        // 'target_departement_id' => 'required|exists:departements,id',
         'aset_id'               => 'required|exists:aset,id',
         'category'              => 'required',
         'tindakan'              => 'required',
+        'kode_ppp'              => 'required',
         'resource_type'         => 'required',
         'emergency_action'         => 'required',
         'problem_detail'        => 'required',
@@ -28,7 +29,7 @@ new class extends Component {
     ]);
 
     try {
-        $dept = Departement::findOrFail($this->target_departement_id);
+        // $dept = Departement::findOrFail($this->target_departement_id);
 
         // 2. Logika Deadline
         $deadline = ($this->alloted_time === 'custom')
@@ -36,14 +37,16 @@ new class extends Component {
             : now()->addHours((int)$this->alloted_time);
 
         // 3. Penomoran Tiket
-        $lastTicket = Ticket::where('ticket_number', 'like', $dept->code . '-%')
+        // $lastTicket = Ticket::where('ticket_number', 'like', $dept->code . '-%')
+        $lastTicket = Ticket::where('ticket_number', 'like', $this->kode_ppp . '-%')
             ->orderByRaw('CAST(SUBSTRING_INDEX(ticket_number, "-", -1) AS UNSIGNED) DESC')
             ->first();
 
         $nextSequence = $lastTicket
             ? str_pad(((int)explode('-', $lastTicket->ticket_number)[1]) + 1, 3, '0', STR_PAD_LEFT)
             : '001';
-        $ticketNumber = "{$dept->code}-{$nextSequence}";
+        // $ticketNumber = "{$dept->code}-{$nextSequence}";
+        $ticketNumber = "{$this->kode_ppp}-{$nextSequence}";
 
         // 4. Proses Simpan Attachment (Perbaikan utama di sini)
         $path = null;
@@ -56,7 +59,8 @@ new class extends Component {
         $ticket = Ticket::create([
             'user_id'               => Auth::id(),
             'ticket_number'         => $ticketNumber,
-            'target_departement_id' => $this->target_departement_id,
+            // 'target_departement_id' => $this->target_departement_id,
+            'kode_ppp' => $this->kode_ppp,
             'category'              => $this->category,
             'tindakan'              => $this->tindakan,
             'resource_type'         => $this->resource_type,
@@ -76,11 +80,11 @@ new class extends Component {
             'user_id'   => Auth::id(),
             'receiver_id' => $admin->id,
             'status_to' => 'pending',
-            'comment'   => 'Tiket Maintenance berhasil dibuat.',
+            'comment'   => "Tiket baru #{$ticketNumber} berhasil dibuat dengan kode PPP: {$this->kode_ppp}.",
         ]);
         }
         // 6. Reset & Notifikasi
-        $this->reset(['category', 'aset_id', 'tindakan', 'problem_detail', 'target_departement_id', 'attachment', 'custom_date', 'resource_type', 'emergency_action']);
+        $this->reset(['category', 'aset_id', 'tindakan', 'problem_detail', 'attachment', 'custom_date', 'resource_type', 'emergency_action']);
         $this->alloted_time = "24";
 
         $this->dispatch('reset-tomselect');
@@ -142,14 +146,24 @@ $this->dispatch('show-alert', [
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div class="form-control w-full">
-                            <label class="label"><span class="label-text font-bold uppercase text-[10px] tracking-widest opacity-60">Departemen Tujuan</span></label>
-                            <select wire:model="target_departement_id" class="select select-bordered rounded-2xl font-bold focus:ring-2 ring-primary bg-base-50 h-14 transition-all">
+                            <label class="label"><span class="label-text font-bold uppercase text-[10px] tracking-widest opacity-60">Kode PPP</span></label>
+
+
+                            <select wire:model="kode_ppp" class="select select-bordered rounded-2xl font-bold focus:ring-2 ring-primary bg-base-50 h-14 transition-all">
+                                <option value=""> Pilih Kode PPP</option>
+                                <option value="OT">Other Departement</option>
+                                <option value="PI">Plastic Injection</option>
+                                <option value="SH">Safety Injection</option>
+                                <option value="FS">Finishing</option>
+                            </select>
+@error('kode_ppp') <span class="text-error text-[10px] font-bold mt-1 uppercase tracking-tighter">{{ $message }}</span> @enderror
+                            {{-- <select wire:model="target_departement_id" class="select select-bordered rounded-2xl font-bold focus:ring-2 ring-primary bg-base-50 h-14 transition-all">
                                 <option value="">-- Pilih Departemen --</option>
                                 @foreach($departements as $dept)
                                     <option value="{{ $dept->id }}">{{ $dept->name }}</option>
                                 @endforeach
                             </select>
-                            @error('target_departement_id') <span class="text-error text-[10px] font-bold mt-1 uppercase tracking-tighter">{{ $message }}</span> @enderror
+                            @error('target_departement_id') <span class="text-error text-[10px] font-bold mt-1 uppercase tracking-tighter">{{ $message }}</span> @enderror --}}
                         </div>
 
                         <div class="form-control w-full" wire:ignore>

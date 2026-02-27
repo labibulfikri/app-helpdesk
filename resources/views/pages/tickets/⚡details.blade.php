@@ -448,7 +448,7 @@ public function closeTicket() {
                             <div><label class="block opacity-40 font-bold text-[9px] uppercase">Aset</label><p class="font-bold">{{ $ticket->aset->nama_aset ?? ' -' }}</p></div>
                             <div><label class="block opacity-40 font-bold text-[9px] uppercase">Jenis</label><p class="font-bold">{{ $ticket->category }}</p></div>
                             <div><label class="block opacity-40 font-bold text-[9px] uppercase">Tindakan</label><p class="font-bold italic uppercase">{{ $ticket->tindakan }}</p></div>
-                            <div><label class="block opacity-40 font-bold text-[9px] uppercase">Departemen</label><p class="font-bold">{{ $ticket->target_departement->name }}</p></div>
+                            <div><label class="block opacity-40 font-bold text-[9px] uppercase">Kode PPP</label><p class="font-bold">{{ $ticket->kode_ppp }}</p></div>
                         </div>
                         <div class="space-y-4">
                             <label class="block opacity-40 font-bold text-[9px] uppercase">Problem Detail</label>

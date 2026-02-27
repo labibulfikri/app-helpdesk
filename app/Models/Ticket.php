@@ -36,9 +36,13 @@ class Ticket extends Model
         'alloted_time',
         'attachment',
         'aset_id',
-        'alasan_pembatalan'
+        'alasan_pembatalan',
+        'kode_ppp'
     ];
-
+protected $casts = [
+    'completion_date' => 'datetime',
+    'created_at' => 'datetime',
+];
     protected $guarded = [];
 
     // Relasi ke Pembuat

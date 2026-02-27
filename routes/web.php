@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\TicketPrintController;
+use App\Http\Controllers\ReportExportController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -34,7 +35,10 @@ Route::get('/tickets/{id}/print', [TicketPrintController::class, 'print'])->name
     //route report
     Route::livewire('/report', 'pages::report.⚡index')->name('report.index');
 
+Route::get('/export-pdf', [ReportExportController::class, 'exportPdf'])->name('export.pdf');
 
+    // Route untuk Ekspor Excel
+    Route::get('/export-excel', [ReportExportController::class, 'exportExcel'])->name('export.excel');
 
     Route::livewire('/tickets/{id}/details', 'pages::tickets.⚡details')->name('tickets.details');
     // Route::livewire('/tickets/manage', 'pages::tickets.⚡manage')->name('tickets.manage');

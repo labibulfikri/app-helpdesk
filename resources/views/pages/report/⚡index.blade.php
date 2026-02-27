@@ -5,6 +5,8 @@ use App\Models\Ticket;
 use App\Models\User;
 use App\Models\Departement; // Pastikan Model ini ada
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Auth; // Tambahkan ini
+use Carbon\Carbon; // Tambahkan ini
 use Illuminate\Support\Facades\DB;
 
 new class extends Component
@@ -15,7 +17,7 @@ new class extends Component
     public $endDate;
     public $statusFilter = '';
     public $technicianFilter = '';
-    public $deptFilter = '';
+    public $kode_ppp = '';
 
     public function mount()
     {
@@ -40,8 +42,8 @@ new class extends Component
             $baseQuery->where('technician_id', $this->technicianFilter);
         }
 
-        if ($this->deptFilter) {
-            $baseQuery->where('target_departement_id', $this->deptFilter);
+        if ($this->kode_ppp) {
+            $baseQuery->where('kode_ppp', $this->kode_ppp);
         }
 
         if ($this->statusFilter) {
@@ -59,34 +61,27 @@ new class extends Component
 
     public function render()
     {
-        $query = Ticket::with(['user', 'technician', 'aset', 'target_departement'])
+        $query = Ticket::with(['user', 'technician', 'aset'])
             ->whereBetween('created_at', [$this->startDate . ' 00:00:00', $this->endDate . ' 23:59:59']);
 
         // Filter Tabel
         if ($this->statusFilter) $query->where('status', $this->statusFilter);
         if ($this->technicianFilter) $query->where('technician_id', $this->technicianFilter);
-        if ($this->deptFilter) $query->where('target_departement_id', $this->deptFilter);
+        if ($this->kode_ppp) $query->where('kode_ppp', $this->kode_ppp);
 
         return view('pages.report.⚡index', [
             'tickets' => $query->latest()->paginate(15),
             'technicians' => User::where('role', 'technician')->get(),
-            'departments' => Departement::all(),
             'chartValues' => $this->getChartData(),
             'totalStats' => (clone $query)->count(),
             'doneStats' => (clone $query)->where('status', 'done')->count(),
         ])->layout('layouts.app');
     }
 }
-?><div class="min-h-screen bg-base-200/50 p-4 lg:p-10">
-    <style>
-        @media print {
-            .no-print, .btn, .select, .input, .pagination, .navbar, .sidebar { display: none !important; }
-            body { background: white !important; margin: 0; padding: 0; }
-            .card { border: 1px solid #eee !important; box-shadow: none !important; border-radius: 0 !important; }
-            .max-w-7xl { max-width: 100% !important; width: 100% !important; }
-            canvas { max-height: 250px !important; width: 100% !important; }
-        }
-    </style>
+?>
+
+<div class="min-h-screen bg-base-200/50 p-4 lg:p-10">
+
 
     <div class="max-w-7xl mx-auto space-y-6">
         {{-- HEADER --}}
@@ -95,9 +90,39 @@ new class extends Component
                 <h1 class="text-4xl font-black italic uppercase tracking-tighter">Report Analytics</h1>
                 <p class="text-[10px] font-bold opacity-50 uppercase tracking-[0.2em]">Maintenance & Dept Performance</p>
             </div>
-            {{-- <button onclick="window.print()" class="btn btn-primary rounded-2xl font-black uppercase px-8 shadow-xl shadow-primary/20">
-                Print Report
-            </button> --}}
+            {{-- TOMBOL CETAK --}}
+<div class="flex gap-2 no-print">
+    <a href="{{ route('export.pdf', [
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'statusFilter' => $statusFilter,
+            'technicianFilter' => $technicianFilter,
+            'kode_ppp' => $kode_ppp
+       ]) }}"
+       target="_blank"
+       class="btn btn-error rounded-2xl text-white font-black uppercase px-6 shadow-lg shadow-error/20">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+        </svg>
+        PDF Masterlist
+    </a>
+
+    <a href="{{ route('export.excel', [
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'statusFilter' => $statusFilter,
+            'technicianFilter' => $technicianFilter,
+            'kode_ppp' => $kode_ppp
+       ]) }}"
+       class="btn btn-success rounded-2xl text-white font-black uppercase px-6 shadow-lg shadow-success/20">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        Excel Masterlist
+    </a>
+</div>
+
+
         </div>
 
         {{-- FILTER BOX --}}
@@ -113,11 +138,12 @@ new class extends Component
                 </div>
                 <div class="form-control">
                     <label class="label font-black text-[10px] uppercase opacity-40">Departemen</label>
-                    <select wire:model.live="deptFilter" class="select select-bordered rounded-2xl font-bold uppercase text-xs">
-                        <option value="">Semua Dept</option>
-                        @foreach($departments as $dept)
-                            <option value="{{ $dept->id }}">{{ $dept->name }}</option>
-                        @endforeach
+                    <select wire:model.live="kode_ppp" class="select select-bordered rounded-2xl font-bold uppercase text-xs">
+                        <option value=""> Pilih Kode PPP</option>
+                        <option value="OT">Other Departement</option>
+                        <option value="PI">Plastic Injection</option>
+                        <option value="SH">Safety Injection</option>
+                        <option value="FS">Finishing</option>
                     </select>
                 </div>
                 <div class="form-control">
@@ -148,7 +174,7 @@ new class extends Component
             {{-- CHART CARD --}}
             <div class="lg:col-span-8 card bg-white p-8 shadow-sm border border-base-300 rounded-[3rem] relative overflow-hidden">
                 {{-- LOADING SPINNER --}}
-                <div wire:loading wire:target="startDate, endDate, statusFilter, technicianFilter, deptFilter" class="absolute inset-0 bg-white/60 z-10 flex items-center justify-center">
+                <div wire:loading wire:target="startDate, endDate, statusFilter, technicianFilter, kode_ppp" class="absolute inset-0 bg-white/60 z-10 flex items-center justify-center">
                     <span class="loading loading-spinner loading-lg text-primary"></span>
                 </div>
 
