@@ -44,7 +44,7 @@ Route::get('/export-pdf', [ReportExportController::class, 'exportPdf'])->name('e
     // Route::livewire('/tickets/manage', 'pages::tickets.⚡manage')->name('tickets.manage');
     Route::livewire('/tickets/create', 'pages::tickets.⚡created')->name('tickets.create');
     Route::livewire('/tickets', 'pages::tickets.⚡index')->name('tickets.index');
-    Route::livewire('/tickets/edit/{id}', 'pages::tickets.⚡edit')->name('tickets.edit');
+    Route::livewire('/tickets/{id}/edit', 'pages::tickets.⚡edit')->name('tickets.edit');
 
 
 

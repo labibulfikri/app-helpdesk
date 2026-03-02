@@ -23,19 +23,18 @@ new class extends Component
                                            ->count()
         ];
     }
+public function markAsRead($id)
+{
+    $notification = TicketHistory::where('id', $id)
+                                 ->where('received_id', Auth::id())
+                                 ->first();
 
-    public function markAsRead($id)
-    {
-        // Cari history berdasarkan ID dan pastikan memang milik user tersebut
-        $notification = TicketHistory::where('id', $id)
-                                     ->where('received_id', Auth::id())
-                                     ->first();
-
-        if ($notification) {
-            $notification->update(['is_read' => true]);
-            return $this->redirectRoute('tickets.details', $notification->ticket_id, navigate: true);
-        }
+    if ($notification) {
+        $notification->update(['is_read' => true]);
+        // Pastikan route 'tickets.details' menerima parameter ID ticket
+        return $this->redirectRoute('tickets.details', ['id' => $notification->ticket_id], navigate: true);
     }
+}
 
     public function markAllAsRead()
     {
@@ -72,8 +71,8 @@ new class extends Component
 
             <div class="max-h-96 overflow-y-auto scrollbar-hide">
                 @forelse($notifications as $notif)
-                    <li class="border-b border-base-content/5 last:border-0 {{ !$notif->is_read ? 'bg-primary/5' : '' }}">
-                        <a wire:click.prevent="markAsRead({{ $notif->id }})"
+                    <li wire:key="notif-{{ $notif->id }}" class="border-b border-base-content/5 last:border-0 {{ !$notif->is_read ? 'bg-primary/5' : '' }}">
+        <a wire:click.prevent="markAsRead({{ $notif->id }})" href="#"
                            class="flex flex-col items-start gap-1 py-4 px-6 active:bg-base-200 transition-all duration-200">
 
                             <div class="flex justify-between w-full items-center mb-1">

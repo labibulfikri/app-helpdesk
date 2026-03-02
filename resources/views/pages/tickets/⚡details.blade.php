@@ -1,5 +1,4 @@
 <?php
-
 use Livewire\Component;
 use App\Models\Ticket;
 use App\Models\User;

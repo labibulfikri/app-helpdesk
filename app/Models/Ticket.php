@@ -37,7 +37,8 @@ class Ticket extends Model
         'attachment',
         'aset_id',
         'alasan_pembatalan',
-        'kode_ppp'
+        'kode_ppp',
+        'deskripsi',
     ];
 protected $casts = [
     'completion_date' => 'datetime',

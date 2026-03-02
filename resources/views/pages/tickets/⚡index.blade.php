@@ -110,6 +110,25 @@ public function approveCancel($id)
         return view('pages.tickets.⚡index')->layout('layouts.app');
     }
 }; ?>
+
+
+
+    @if (session()->has('ticket_updated'))
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const data = @json(session('ticket_updated'));
+        Swal.fire({
+            icon: data.icon,
+            title: data.title,
+            text: data.text,
+            buttonsStyling: false,
+            customClass: {
+                confirmButton: 'btn btn-primary px-10 rounded-xl'
+            }
+        });
+    });
+</script>
+@endif
 <div class="max-w-7xl mx-auto p-6 lg:p-10 space-y-8">
 
      @if (session()->has('success'))
@@ -281,6 +300,7 @@ public function approveCancel($id)
         </div>
     </div>
 </div>
+
 
 <script>
     function confirmDelete(id) {
