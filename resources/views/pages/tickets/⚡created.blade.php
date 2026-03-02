@@ -89,11 +89,13 @@ new class extends Component {
             $this->dispatch('reset-tomselect');
 
             // SweetAlert Sukses
-            $this->dispatch('show-alert', [
-                'icon'  => 'success',
-                'title' => 'Berhasil!',
-                'text'  => "Tiket #{$ticketNumber} berhasil dikirim ke tim Maintenance.",
-            ]);
+            session()->flash('ticket_updated', [
+            'icon' => 'success',
+            'title' => 'Berhasil!',
+            'text' => 'Tiket #' . $ticketNumber . ' telah dibuat.'
+        ]);
+
+             return redirect()->route('tickets.index');
 
         } catch (\Exception $e) {
             // Log error untuk pengecekan admin
