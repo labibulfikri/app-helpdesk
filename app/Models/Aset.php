@@ -31,6 +31,13 @@ public function tickets() {
         return $this->hasMany(Ticket::class); // Untuk melihat history servis
     }
 
+    // App\Models\Aset.php
+public function maintenances()
+{
+    return $this->hasMany(AsetMaintenances::class, 'aset_id');
+}
+
+
     public function departement() {
         return $this->belongsTo(Departement::class);
     }
